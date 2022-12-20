@@ -52,7 +52,11 @@ class LoggingAction(argparse.Action): # pylint: disable=missing-class-docstring
 
 def list_alias():
     """fetch alias via utils API and return a list of IPs"""
-    r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias_util/list', args.group,), auth=(api_key, api_secret))
+    r = requests.get(
+        '%s/%s/%s' %
+            (api_url, 'firewall/alias_util/list', args.group,),
+        auth=(api_key, api_secret)
+        )
     if r.status_code == 200:
         cont = json.loads(r.text)
         return [ad['ip'] for ad in cont['rows']]
