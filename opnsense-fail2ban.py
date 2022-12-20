@@ -58,10 +58,11 @@ def get_request(uriparams):
     sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
 
 def list_alias():
-    """fetch alias via utils API"""
+    """fetch alias via utils API and return a list of IPs"""
     r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias_util/list', args.group,), auth=(api_key, api_secret))
     if r.status_code == 200:
-        return json.loads(r.text)
+        cont = json.loads(r.text)
+        return [ad['ip'] for ad in cont['rows']]
     sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
 
 def alias_util_post(aliasaction, ip):
@@ -253,16 +254,9 @@ if args.action == 'flush':
     #pprint.PrettyPrinter(indent=4).pprint(r)
     #pprint.PrettyPrinter(indent=4).pprint(json.loads(r.text))
     if args.check:
-        r = get_request('getItem/%s' % gUUID)
-        aliascontlist = r['alias']['content']
-        aliascont = []
-        for name, settings in aliascontlist.items():
-            if settings['selected'] == 1 and len(name) > 0:
-                aliascont.append(name)
+        aliascont = list_alias()
         logger.debug('current cont: "%s"', '; '.join(aliascont))
         if aliascont:
             sys.exit('ERROR: list is not flushed')
         else:
             logger.info('OK: list is empty')
-    r = list_alias()
-    pprint.PrettyPrinter(indent=4).pprint(r)
