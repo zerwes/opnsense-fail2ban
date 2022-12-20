@@ -37,8 +37,6 @@ api_secret = '{{ opnsense_api_secret }}'
 
 # /api/<module>/<controller>/<command>/[<param1>/[<param2>/...]]
 api_url = 'https://{{ opnsense_api_host }}/api'
-#url = 'https://{{ opnsense_api_host }}/api/firewall/alias'
-#url_diag = 'https://{{ opnsense_api_host }}/api/diagnostics/firewall'
 
 # default alias to use
 default_alias = '{{ opnsense_default_alias }}'
@@ -221,9 +219,6 @@ if args.action == 'flush':
         logger.info('delete %s ...', ip)
         alias_util_post('delete', ip)
 
-    #r = requests.get('%s_util/list/%s' % (url, args.group), auth=(api_key, api_secret))
-    #pprint.PrettyPrinter(indent=4).pprint(r)
-    #pprint.PrettyPrinter(indent=4).pprint(json.loads(r.text))
     if args.check:
         aliascont = list_alias()
         logger.debug('current cont: "%s"', '; '.join(aliascont))
