@@ -57,14 +57,21 @@ def get_request(uriparams):
         return json.loads(r.text)
     sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
 
-def alias_util_post(aliasaction, jsondata):
+def list_alias():
+    """fetch alias via utils API"""
+    r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias_util/list', args.group,), auth=(api_key, api_secret))
+    if r.status_code == 200:
+        return json.loads(r.text)
+    sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
+
+def alias_util_post(aliasaction, ip):
     """alias_util action"""
     purl = '%s/%s/%s/%s' % (api_url, 'firewall/alias_util', aliasaction, args.group)
     headers = {'Content-Type': 'application/json'}
     r = requests.post(
         purl,
         headers=headers,
-        json=jsondata,
+        json={'address': '%s' % ip},
         auth=(api_key, api_secret)
         )
     if r.status_code == 200:
@@ -186,12 +193,11 @@ if args.action == 'ban':
             'no need to ban IP %s as it already in the list %s', args.ip, ';'.join(aliascont)
             )
         sys.exit()
-    alias_util_post('add', {'address': '%s' % args.ip})
+
+    alias_util_post('add', args.ip)
 
     if args.check:
         r = get_request('getItem/%s' % gUUID)
-        #if logger.isEnabledFor(logging.DEBUG):
-        #    pprint.PrettyPrinter(indent=4).pprint(r)
         aliascontlist = r['alias']['content']
         aliascont = []
         for name, settings in aliascontlist.items():
@@ -216,25 +222,11 @@ if args.action == 'unban':
             'no need to unban IP %s as it is not in the list %s', args.ip, ';'.join(aliascont)
             )
         sys.exit()
-    purl = '%s_util/delete/%s' % (url, args.group)
-    headers = {'Content-Type': 'application/json'}
-    r = requests.post(
-        purl,
-        headers=headers,
-        json={'address': '%s' % args.ip},
-        auth=(api_key, api_secret)
-        )
-    if r.status_code == 200:
-        logger.info('OK w/ code %s', r.status_code)
-    else:
-        if logger.isEnabledFor(logging.DEBUG):
-            pprint.PrettyPrinter(indent=4).pprint(r)
-        sys.exit('ERROR @ post: %s :: %s' % (r.status_code, r.text,))
+
+    alias_util_post('delete', args.ip)
 
     if args.check:
         r = get_request('getItem/%s' % gUUID)
-        #if logger.isEnabledFor(logging.DEBUG):
-        #    pprint.PrettyPrinter(indent=4).pprint(r)
         aliascontlist = r['alias']['content']
         aliascont = []
         for name, settings in aliascontlist.items():
@@ -253,22 +245,9 @@ if args.action == 'flush':
     # upstream issue https://github.com/opnsense/core/issues/4196
     # flush seems not to be persistent
     logger.info('delete: %s', ','.join(aliascont))
-    purl = '%s_util/delete/%s' % (url, args.group)
-    headers = {'Content-Type': 'application/json'}
     for ip in aliascont:
         logger.info('delete %s ...', ip)
-        r = requests.post(
-            purl,
-            headers=headers,
-            json={'address': '%s' % ip},
-            auth=(api_key, api_secret)
-            )
-        if logger.isEnabledFor(logging.DEBUG):
-            pprint.PrettyPrinter(indent=4).pprint(r)
-        if r.status_code == 200:
-            logger.info('OK w/ code %s', r.status_code)
-        else:
-            sys.exit('ERROR @ post: %s :: %s' % (r.status_code, r.text,))
+        alias_util_post('delete', ip)
 
     #r = requests.get('%s_util/list/%s' % (url, args.group), auth=(api_key, api_secret))
     #pprint.PrettyPrinter(indent=4).pprint(r)
@@ -285,5 +264,5 @@ if args.action == 'flush':
             sys.exit('ERROR: list is not flushed')
         else:
             logger.info('OK: list is empty')
-    r = requests.get('%s_util/list/%s' % (url, args.group))
+    r = list_alias()
     pprint.PrettyPrinter(indent=4).pprint(r)
