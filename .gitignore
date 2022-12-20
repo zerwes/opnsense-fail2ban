@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# other
+jinja2.yml
+opnsensefail2ban.py
+*.swp
