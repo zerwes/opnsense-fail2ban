@@ -50,13 +50,6 @@ class LoggingAction(argparse.Action): # pylint: disable=missing-class-docstring
         logger.setLevel(values)
         setattr(namespace, self.dest, values)
 
-def get_request(uriparams):
-    """peform a get request on the alias API"""
-    r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias', uriparams,), auth=(api_key, api_secret))
-    if r.status_code == 200:
-        return json.loads(r.text)
-    sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
-
 def list_alias():
     """fetch alias via utils API and return a list of IPs"""
     r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias_util/list', args.group,), auth=(api_key, api_secret))
@@ -157,25 +150,8 @@ args = parser.parse_args()
 if args.loglevel is None:
     logging.disable(logging.CRITICAL)
 
-# getAliasUUID
-r = get_request('getAliasUUID/%s' % args.group)
-if logger.isEnabledFor(logging.DEBUG):
-    pprint.PrettyPrinter(indent=4).pprint(r)
-gUUID = r['uuid']
-
 # get current members
-# FIXME: easier way using alias_util # pylint: disable=fixme
-#r = requests.get('%s_util/list/%s' % (url, args.group), auth=(api_key, api_secret))
-#pprint.PrettyPrinter(indent=4).pprint(r)
-#pprint.PrettyPrinter(indent=4).pprint(json.loads(r.text))
-r = get_request('getItem/%s' % gUUID)
-if logger.isEnabledFor(logging.DEBUG):
-    pprint.PrettyPrinter(indent=4).pprint(r)
-aliascontlist = r['alias']['content']
-aliascont = []
-for name, settings in aliascontlist.items():
-    if settings['selected'] == 1 and len(name) > 0:
-        aliascont.append(name)
+aliascont = list_alias()
 if logger.isEnabledFor(logging.DEBUG):
     pprint.PrettyPrinter(indent=4).pprint(aliascont)
 
@@ -198,12 +174,7 @@ if args.action == 'ban':
     alias_util_post('add', args.ip)
 
     if args.check:
-        r = get_request('getItem/%s' % gUUID)
-        aliascontlist = r['alias']['content']
-        aliascont = []
-        for name, settings in aliascontlist.items():
-            if settings['selected'] == 1 and len(name) > 0:
-                aliascont.append(name)
+        aliascont = list_alias()
         logger.debug('current cont: "%s"', '; '.join(aliascont))
         if args.ip in aliascont:
             logger.info('OK: new IP found in cont')
@@ -227,12 +198,7 @@ if args.action == 'unban':
     alias_util_post('delete', args.ip)
 
     if args.check:
-        r = get_request('getItem/%s' % gUUID)
-        aliascontlist = r['alias']['content']
-        aliascont = []
-        for name, settings in aliascontlist.items():
-            if settings['selected'] == 1 and len(name) > 0:
-                aliascont.append(name)
+        aliascont = list_alias()
         logger.debug('current cont: "%s"', '; '.join(aliascont))
         if args.ip in aliascont:
             sys.exit('ERROR: IP still found in cont')
