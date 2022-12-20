@@ -52,10 +52,27 @@ class LoggingAction(argparse.Action): # pylint: disable=missing-class-docstring
 
 def get_request(uriparams):
     """peform a get request on the alias API"""
-    r = requests.get('%s/%s/%s' % (url, uriparams,), auth=(api_key, api_secret))
+    r = requests.get('%s/%s/%s' % (api_url, 'firewall/alias', uriparams,), auth=(api_key, api_secret))
     if r.status_code == 200:
         return json.loads(r.text)
     sys.exit('ERROR @ request: %s :: %s' % (r.status_code, r.text,))
+
+def alias_util_post(aliasaction, jsondata):
+    """alias_util action"""
+    purl = '%s/%s/%s/%s' % (api_url, 'firewall/alias_util', aliasaction, args.group)
+    headers = {'Content-Type': 'application/json'}
+    r = requests.post(
+        purl,
+        headers=headers,
+        json=jsondata,
+        auth=(api_key, api_secret)
+        )
+    if r.status_code == 200:
+        logger.info('OK w/ code %s', r.status_code)
+    else:
+        if logger.isEnabledFor(logging.DEBUG):
+            pprint.PrettyPrinter(indent=4).pprint(r)
+        sys.exit('ERROR @ post: %s :: %s' % (r.status_code, r.text,))
 
 def get_states(ip):
     """query states for a defined IP"""
@@ -169,20 +186,7 @@ if args.action == 'ban':
             'no need to ban IP %s as it already in the list %s', args.ip, ';'.join(aliascont)
             )
         sys.exit()
-    purl = '%s_util/add/%s' % (url, args.group)
-    headers = {'Content-Type': 'application/json'}
-    r = requests.post(
-        purl,
-        headers=headers,
-        json={'address': '%s' % args.ip},
-        auth=(api_key, api_secret)
-        )
-    if r.status_code == 200:
-        logger.info('OK w/ code %s', r.status_code)
-    else:
-        if logger.isEnabledFor(logging.DEBUG):
-            pprint.PrettyPrinter(indent=4).pprint(r)
-        sys.exit('ERROR @ post: %s :: %s' % (r.status_code, r.text,))
+    alias_util_post('add', {'address': '%s' % args.ip})
 
     if args.check:
         r = get_request('getItem/%s' % gUUID)
