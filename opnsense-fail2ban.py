@@ -122,7 +122,7 @@ parser.add_argument(
 parser.add_argument(
     '-g', '--group', type=str,
     default=default_alias,
-    help='main group/alias for actions'
+    help='group/alias for actions (default: %s)' % default_alias
     )
 parser.add_argument(
     '-a', '--action', type=str,
@@ -137,7 +137,7 @@ parser.add_argument(
 parser.add_argument(
     '-c', '--check',
     action='store_true', default=False,
-    help='re-fetch cont after ban/unban'
+    help='re-fetch and check alias after ban/unban'
     )
 parser.add_argument(
     '-k', '--kill',
@@ -182,6 +182,7 @@ if args.action == 'ban':
             sys.exit('ERROR: missing new IP in cont')
 
     if args.kill:
+        logger.info('kill states ...')
         rkill = kill_states(args.ip)
         if logger.isEnabledFor(logging.DEBUG):
             pprint.PrettyPrinter(indent=4).pprint(rkill)
