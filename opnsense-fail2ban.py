@@ -130,7 +130,7 @@ parser.add_argument(
     '-a', '--action', type=str,
     choices=['ban', 'unban', 'flush', 'list'],
     default='list',
-    help='action to perform'
+    help='action to perform (default: list)'
     )
 parser.add_argument(
     '-i', '--ip', type=str,
