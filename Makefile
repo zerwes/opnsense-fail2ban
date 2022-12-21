@@ -12,4 +12,5 @@ script/opnsense-fail2ban.py: opnsense-fail2ban.py jinja2.yml
 	@echo "wrote '$@'"
 
 requirements:
+	pip install -r requirements.txt
 	pip install jinja2-cli
