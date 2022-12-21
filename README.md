@@ -82,7 +82,7 @@ Edit `opnsense-fail2ban.py` and replace the jinja2 vars:
 In case you use a self-signed certificate on the opnsense firewall, you must import the opnsense (ca) certificate in order to trust it. And the value defined in `opnsense_api_host` must be valid in terms of ssl (i.e. the value must match the CN or a DNS or IP entry from the Alternative Names).
 
 ### opnsense alias
-The opnsense alias to use should be of **Type**: *Hosts(s)*
+The opnsense alias to use should be of **Type**: *Hosts(s)* (https://docs.opnsense.org/manual/aliases.html#alias-types)
 
 ## links
 ### opnsense api
