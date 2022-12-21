@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 # other
-jinja2.yml
+jinja2.yml*
 *.swp
 script/*
