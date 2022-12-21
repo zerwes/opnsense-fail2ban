@@ -2,7 +2,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 # opnsense-fail2ban
-fail2ban script for opnsense
+fail2ban action script for opnsense
 
 ## features
 
@@ -15,6 +15,7 @@ fail2ban script for opnsense
  * use a predefined alias by default or define it via a argument
 
 ## usage
+
 ```
 usage: opnsense-fail2ban.py [-h] [-l {CRITICAL,FATAL,ERROR,WARN,WARNING,INFO,DEBUG,NOTSET}] [-g GROUP]
                             [-a {ban,unban,flush,list}] [-i IP] [-c] [-k]
@@ -34,6 +35,21 @@ optional arguments:
   -k, --kill            kill states after ban action for a IP
 ```
 
+## requirements
+
+All requirements are defined in [requirements.txt](requirements.txt).
+
+You can install them using:
+```
+pip install -r requirements.txt
+```
+
+On debian and derivates you can use:
+```
+apt install python3-simplejson python3-requests
+```
+if you prefer to use the package manager instead of pip.
+
 ## setup
 
 The script uses jinja2 variables, so you have several options:
@@ -51,9 +67,14 @@ make
 This will install `jinja2-cli` and generate `script/opnsense-fail2ban.py` with the jinja2 vars replaced according to your settings.
 
 ### manual
+
 Edit `opnsense-fail2ban.py` and replace the jinja2 vars:
 
  * `{{ opnsense_api_host }}`
  * `{{ opnsense_api_key }}`
  * `{{ opnsense_api_secret }}`
  * `{{ opnsense_default_alias }}`
+
+## caveats
+
+In case you use a self-signed certificate on the opnsense firewall, you must import the opnsense (ca) certificate in order to trust it.
