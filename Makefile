@@ -1,4 +1,3 @@
-# requires:
 export SHELL = /bin/bash
 
 all: requirements script
