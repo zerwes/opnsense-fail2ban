@@ -1,3 +1,6 @@
+[![pylint](https://github.com/zerwes/opnsense-fail2ban/actions/workflows/pylint.yml/badge.svg)](https://github.com/zerwes/opnsense-fail2ban/actions/workflows/pylint.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+
 # opnsense-fail2ban
 fail2ban script for opnsense
 
