@@ -1,0 +1,10 @@
+---
+# opnsense firewall hostname or IP
+opnsense_api_host: opnsense.local
+
+# see https://docs.opnsense.org/development/how-tos/api.html
+opnsense_api_key:
+opnsense_api_secret:
+
+# define the alias name to use by default
+opnsense_default_alias: F2BAN_BLOCK
