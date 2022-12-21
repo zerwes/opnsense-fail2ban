@@ -2,7 +2,7 @@
 # vim: set fileencoding=utf-8
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
 
-# manipulate the opnsense alias by adding/removing IPs
+# manipulate a opnsense alias by adding/removing IPs
 #
 # ban:
 #   opnsense-fail2ban.py -l DEBUG -a ban -i 11.22.33.44 -c
@@ -112,7 +112,7 @@ logging.basicConfig(
     format='%(levelname)s\t[%(name)s] %(funcName)s: %(message)s'
     )
 
-parser = argparse.ArgumentParser(description='manipulate the opnsense alias by adding/removing IPs')
+parser = argparse.ArgumentParser(description='manipulate a opnsense alias by adding/removing IPs')
 # pylint: disable=protected-access
 parser.add_argument(
     '-l', '--loglevel',
