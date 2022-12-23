@@ -58,6 +58,7 @@ The script uses jinja2 variables, so you have several options:
 ### ansible
 
 Install the script using ansible and define the variables in your ansible var files.
+See [this post](https://zero-sys.net/ubloit/blog/opnsensefail2ban) for more details.
 
 ### jinja2-cli
 
