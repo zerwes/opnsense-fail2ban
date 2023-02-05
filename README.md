@@ -96,3 +96,6 @@ The opnsense alias to use should be of **Type**: *Hosts(s)* (https://docs.opnsen
 
 ### blog post on the topic
  * https://zero-sys.net/ubloit/blog/opnsensefail2ban
+
+### gist: shell script snippet to keep f2b banns and the opnsense alias in sync:
+https://gist.github.com/zerwes/f9f659a0751ee3acb6ba8910a9185f3d
