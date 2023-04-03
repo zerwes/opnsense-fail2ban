@@ -85,6 +85,12 @@ In case you use a self-signed certificate on the opnsense firewall, you must imp
 ### opnsense alias
 The opnsense alias to use should be of **Type**: *Hosts(s)* (https://docs.opnsense.org/manual/aliases.html#alias-types)
 
+### diverged alias and fail2ban state
+Sometimes it might happen that the state of the alias and the fail2ban database might diverge (this can happen by manual editing the alias etc...).
+
+There is a small script snippet to keep f2b banns and the opnsense alias in sync as a gist:
+https://gist.github.com/zerwes/f9f659a0751ee3acb6ba8910a9185f3d
+
 ## links
 ### opnsense api
  * https://docs.opnsense.org/development/how-tos/api.html
@@ -96,6 +102,3 @@ The opnsense alias to use should be of **Type**: *Hosts(s)* (https://docs.opnsen
 
 ### blog post on the topic
  * https://zero-sys.net/ubloit/blog/opnsensefail2ban
-
-### gist: shell script snippet to keep f2b banns and the opnsense alias in sync:
-https://gist.github.com/zerwes/f9f659a0751ee3acb6ba8910a9185f3d
